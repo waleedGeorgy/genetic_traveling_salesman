@@ -17,14 +17,8 @@ df.reset_index(inplace=True)
 len(df.dropna(subset=['latitude', 'longitude'])) - len(df)
 
 # ## 2. Exploratory analysis
-#
-# Find the distribution of cafés across the United Kingdom.
-#
-# How are restaurants distributed across towns?
-# What does a geospatial representation of the data look like?
 
 # ### 2.1 Distribution of cafés by town
-
 
 vis = df.groupby('city').storeNumber.count().reset_index()
 px.bar(vis, x='city', y='storeNumber', template='seaborn')
@@ -39,8 +33,10 @@ for _, r in df.iterrows():
 full_map.save('main_map.html')
 
 # ## 3. Testing the distance methodology
-# 
-# To assess how good each solution is there needs to be a measure of fitness. For the purpose of this example the distance 'as the crow flies' is used without taking into account actual road distances however this could be explored in future.
+
+# To assess how good each solution is there needs to be a measure of fitness.
+# For the purpose of this example the distance 'as the crow flies' is used
+# without taking into account actual road distances however this could be explored in the future.
 
 origin = (df['latitude'][0], df['longitude'][0])
 dest = (df['latitude'][100], df['longitude'][100])
@@ -48,11 +44,11 @@ dest = (df['latitude'][100], df['longitude'][100])
 print(geodesic(origin, dest).kilometers)
 
 # ## 4. Preparing data structures
-# 
+
 # The data structures needed for testing solutions are the "genes" or store options to select from named *genes*
-# 
+
 # A lookup to access these genes known as *stores* 
-# 
+
 # A *check_range* which is used to check that every option is given in a solution (a key criteria in the TSP).
 
 test = df.head(10)
@@ -71,7 +67,6 @@ check_range = [i for i in range(0, 10)]
 #  4. crossover_func: applies the crossover
 #  5. on_crossover: applies the mutation after crossover
 #  6. on_generation: used to print the progress and results at each generation
-
 
 # Assess the quality or fitness of a solution so that only the fittest are selected for the next generation and to breed.
 
@@ -229,20 +224,17 @@ def on_generation(ga):
 
 
 # ## 6. Executing the algorithm
-# 
-# The genetic algorithm is set up as instance and at initialisation several parameters are given. 
-# 
+# The genetic algorithm is set up as instance and at initialisation several parameters are given.
 # The algorithm then runs to find the best solution for a set number of generations.
 
 # ### 6.1 Example Initialising the algorithm
-# 
-# The algorithm is initialised below.
 # 
 # Notable parameters include:
 #   - The use of gene space to limit the possible genes chosen to just be those in the TSP range
 #   - Mutations being turned off temporarily
 #   - Implementation of custom on_ functions 
-#   - Allow duplication of genes parameter set to false to ensure any newly introduced chromosomes/chromosomes created as population is initialised have no duplicate genes
+#   - Allow duplication of genes parameter set to false to ensure any newly
+#     introduced chromosomes/chromosomes created as population is initialised have no duplicate genes
 
 ga_instance = pygad.GA(num_generations=100,
                        num_parents_mating=40,
@@ -257,14 +249,12 @@ ga_instance = pygad.GA(num_generations=100,
                        keep_parents=6,
                        mutation_probability=0.4)
 
-# ### 6.2 Running the algorithm
-# 
+# 6.2 Running the algorithm
 # The genetic algorithm is run with a simple function call
 
 ga_instance.run()
 
 # ## 7. Assessing results
-# 
 # The result solution can be checked and analysed using the ga_instance itself
 
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
@@ -277,8 +267,8 @@ if ga_instance.best_solution_generation != -1:
           (best_solution_generation=ga_instance.best_solution_generation))
 
 
-# ### 7.1 Verifying a solution
-# 
+# 7.1 Verifying a solution
+
 # For a solution to be valid it needs to have:
 #  - A maximum gene value that matches the total number of stores 
 #  - A minimum gene value of 0 
@@ -300,9 +290,7 @@ verify_solution(solution, 9)
 
 print(solution)
 
-# ### 7.2 Interpreting the result
-# 
-# The result sequence can be used to access latitude and longitude for each store in the solution.
+# ### 7.2 Interpreting the result sequence can be used to access latitude and longitude for each store in the solution.
 
 points = [genes.get(stores[id]) + [stores[id]] for id in solution]
 print(points[:5])
@@ -326,8 +314,6 @@ shortest_map.save('shortest_map.html')
 # Now the algorithm can be scaled up for the whole of the UK, or tailored to just one town. An example of the solution scaled to the UK is given below.
 
 # ## 8. Scaling up the solution
-# 
-# This is where the fun begins!
 
 df = df[df['city'] == 'London']
 genes = {store_num: [lat, lon] for store_num, lat, lon in zip(df['storeNumber'], df['latitude'], df['longitude'])}
@@ -339,14 +325,10 @@ len(population[0])
 
 
 # ### 8.1 Building the final algorithm
-# 
 # The code to build the algorithm has to be re-run with the above data structures altered.
 
 def fitness_func(solution, solution_idx):
     # loop through the length of the chromosome finding the distance between each
-    # gene added
-
-    #  to increment
     total_dist = 0
 
     for gene in range(0, len(solution)):
@@ -478,7 +460,7 @@ ga_instance = pygad.GA(num_generations=100,
 ga_instance.run()
 
 # ## 8.2 Evaluating the final algorithm
-# 
+
 # The overall solution can now be assessed.
 
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
@@ -511,14 +493,11 @@ final_map.save('final_map.html')
 
 
 # ## 10. Total result
-# 
+
 # The total resulting distance around London after optimising the solution is:
 
 def distance(solution):
     # loop through the length of the chromosome finding the distance between each
-    # gene added
-
-    #  to increment
     total_dist = 0
 
     for gene in range(0, len(solution)):
