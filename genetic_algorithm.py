@@ -31,12 +31,12 @@ px.bar(vis, x='city', y='storeNumber', template='seaborn')
 
 # ### 2.2 Map of cafés in the UK
 
-map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
+full_map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
 
 for _, r in df.iterrows():
-    folium.Marker([r['latitude'], r['longitude']], popup=f'<i>{r["storeNumber"]}</i>').add_to(map)
+    folium.Marker([r['latitude'], r['longitude']], popup=f'<i>{r["storeNumber"]}</i>').add_to(full_map)
 
-map.save(map)
+full_map.save('main_map.html')
 
 # ## 3. Testing the distance methodology
 # 
@@ -282,6 +282,7 @@ if ga_instance.best_solution_generation != -1:
     print("Best fitness value reached after {best_solution_generation} generations.".format
           (best_solution_generation=ga_instance.best_solution_generation))
 
+
 # ### 7.1 Verifying a solution
 # 
 # For a solution to be valid it needs to have:
@@ -303,7 +304,6 @@ def verify_solution(solution, max_gene):
 
 verify_solution(solution, 9)
 
-
 print(solution)
 
 # ### 7.2 Interpreting the result
@@ -313,19 +313,19 @@ print(solution)
 points = [genes.get(stores[id]) + [stores[id]] for id in solution]
 print(points[:5])
 
-map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
+shortest_map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
 
 for point in range(0, len(points)):
-    folium.Marker([points[point][0], points[point][1]], popup=f'<i>{points[point][2]}</i>').add_to(map)
+    folium.Marker([points[point][0], points[point][1]], popup=f'<i>{points[point][2]}</i>').add_to(shortest_map)
 
     try:
         folium.PolyLine([(points[point][0], points[point][1]), (points[point + 1][0], points[point + 1][1])],
-                        color='red', weight=5, opacity=0.8).add_to(map)
+                        color='red', weight=5, opacity=0.8).add_to(shortest_map)
 
     except IndexError:
         pass
 
-print(map)
+shortest_map.save('shortest_map.html')
 
 # The map shows the shortest path that has been found. So that the travelling coffee drinker can maximise the time on coffee and minimise the time on travelling.
 # 
@@ -501,33 +501,31 @@ print(f'Generation of best solution: {ga_instance.best_solution_generation}')
 print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx))
 
-# In[148]:
-
-
 verify_solution(solution, len(stores))
 print(solution)
 
 points = [genes.get(stores[id]) + [stores[id]] for id in solution]
 print(points[:5])
 
-map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
+final_map = folium.Map(location=[51.509685, -0.118092], zoom_start=6, tiles="stamentoner")
 
 for point in range(0, len(points)):
-    folium.Marker([points[point][0], points[point][1]], popup=f'<i>{points[point][2]}</i>').add_to(map)
+    folium.Marker([points[point][0], points[point][1]], popup=f'<i>{points[point][2]}</i>').add_to(final_map)
 
     try:
         folium.PolyLine([(points[point][0], points[point][1]),
                          (points[point + 1][0], points[point + 1][1])],
                         color='red',
                         weight=5,
-                        opacity=0.8).add_to(map)
+                        opacity=0.8).add_to(final_map)
 
     except IndexError:
         pass
 
-print(map)
+final_map.save('final_map.html')
 
-# ## 10. Total result 
+
+# ## 10. Total result
 # 
 # The total resulting distance around London after optimising the solution is:
 
