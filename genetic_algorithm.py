@@ -75,9 +75,6 @@ check_range = [i for i in range(0, 10)]
 
 # Assess the quality or fitness of a solution so that only the fittest are selected for the next generation and to breed.
 
-# In[178]:
-
-
 def build_population(size, chromosome_size):
     population = []
     for i in range(size):
@@ -131,9 +128,6 @@ def fitness_func(solution, solution_idx):
     fitness = 1 / total_dist
 
     return fitness
-
-
-# In[181]:
 
 
 def pmx_crossover(parent1, parent2, sequence_start, sequence_end):
@@ -340,9 +334,6 @@ genes = {store_num: [lat, lon] for store_num, lat, lon in zip(df['storeNumber'],
 stores = list(genes.keys())
 len(stores)
 
-# In[155]:
-
-
 population = build_population(200, 165)
 len(population[0])
 
@@ -350,9 +341,6 @@ len(population[0])
 # ### 8.1 Building the final algorithm
 # 
 # The code to build the algorithm has to be re-run with the above data structures altered.
-
-# In[108]:
-
 
 def fitness_func(solution, solution_idx):
     # loop through the length of the chromosome finding the distance between each
@@ -381,9 +369,6 @@ def fitness_func(solution, solution_idx):
     fitness = 1 / total_dist
 
     return fitness
-
-
-# In[109]:
 
 
 def pmx_crossover(parent1, parent2, sequence_start, sequence_end):
@@ -558,5 +543,3 @@ def distance(solution):
 
 
 distance(solution)
-
-# Which is not too bad for 975 cups of joe. 🥤
