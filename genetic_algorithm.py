@@ -521,4 +521,4 @@ def distance(solution):
     return total_dist
 
 
-distance(solution)
+print(f'Total distance traveled = {distance(solution)}')
